@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Iniciar sesión</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav>
+    <%- include('partials/navbar') %>
+  </nav>
+
+  <div class="contenedor">
+    <h2>Iniciar sesión</h2>
+    <% if (typeof error !== 'undefined') { %>
+      <div class="mensaje-error">
+        <p><%= error %></p>
+      </div>
+    <% } %>
+    
+    <form action="/usuarios/login" method="POST">
+      <input type="email" name="correo" placeholder="Correo electrónico" required><br><br>
+      <input type="password" name="contraseña" placeholder="Contraseña" required><br><br>
+      <button type="submit" class="botom-redireccion">Entrar</button>
+    </form>
+
+    <!-- Enlace para recuperar contraseña -->
+    <div style="margin-top: 10px;">
+      <button class="botom-redireccion" onclick="abrirModalRecuperar()">¿Olvidaste tu contraseña?</button>
+    </div>
+  </div>
+
+  <!-- Modal de recuperación -->
+  <div class="modal" id="modal-recuperar">
+    <div class="modal-contenido" style="max-width: 400px;">
+      <span class="cerrar-modal" onclick="cerrarModal('modal-recuperar')">&times;</span>
+      <div id="paso-1">
+        <h3>Recuperar contraseña</h3>
+        <input type="email" id="correo-recuperar" placeholder="Ingresa tu correo" required>
+        <button onclick="enviarCodigo()">Enviar código</button>
+      </div>
+      <div id="paso-2" style="display: none;">
+        <p>Se ha enviado un código de verificación a tu correo.</p>
+        <input type="text" id="codigo-verificacion" placeholder="Código de 6 dígitos" required>
+        <div style="margin-top: 10px;">
+          <button onclick="verificarCodigo()">Verificar</button>
+          <button onclick="mostrarPaso(1)">← Atrás</button>
+        </div>
+      </div>
+      <div id="paso-3" style="display: none;">
+        <h3>Restablecer contraseña</h3>
+        <input type="password" id="nueva-clave" placeholder="Nueva contraseña" required>
+        <input type="password" id="confirmar-clave" placeholder="Confirmar contraseña" required>
+        <button onclick="cambiarClave()">Cambiar contraseña</button>
+      </div>
+      <div id="mensaje-recuperar" style="margin-top: 10px; color: green;"></div>
+    </div>
+  </div>
+
+  <script>
+    function abrirModalRecuperar() {
+      document.getElementById('modal-recuperar').style.display = 'flex';
+      mostrarPaso(1);
+    }
+
+    function cerrarModal(id) {
+      document.getElementById(id).style.display = 'none';
+    }
+
+    function mostrarPaso(num) {
+      document.getElementById('paso-1').style.display = (num === 1) ? 'block' : 'none';
+      document.getElementById('paso-2').style.display = (num === 2) ? 'block' : 'none';
+      document.getElementById('paso-3').style.display = (num === 3) ? 'block' : 'none';
+      document.getElementById('mensaje-recuperar').textContent = '';
+    }
+
+    async function enviarCodigo() {
+      const correo = document.getElementById('correo-recuperar').value;
+      const res = await fetch('/usuarios/enviar-codigo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ correo })
+      });
+      const data = await res.text();
+      if (res.ok) {
+        mostrarPaso(2);
+      } else {
+        document.getElementById('mensaje-recuperar').textContent = data;
+      }
+    }
+
+    async function verificarCodigo() {
+      const correo = document.getElementById('correo-recuperar').value;
+      const codigo = document.getElementById('codigo-verificacion').value;
+      const res = await fetch('/usuarios/verificar-codigo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ correo, codigo })
+      });
+      const data = await res.text();
+      if (res.ok) {
+        mostrarPaso(3);
+      } else {
+        document.getElementById('mensaje-recuperar').textContent = data;
+      }
+    }
+
+    async function cambiarClave() {
+      const correo = document.getElementById('correo-recuperar').value;
+      const nueva = document.getElementById('nueva-clave').value;
+      const confirmar = document.getElementById('confirmar-clave').value;
+
+      if (nueva !== confirmar) {
+        document.getElementById('mensaje-recuperar').textContent = "Las contraseñas no coinciden.";
+        return;
+      }
+
+      const res = await fetch('/usuarios/cambiar-clave', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ correo, nueva })
+      });
+
+      const data = await res.text();
+      if (res.ok) {
+        document.getElementById('mensaje-recuperar').textContent = "Contraseña actualizada correctamente. Ahora puedes iniciar sesión.";
+        setTimeout(() => cerrarModal('modal-recuperar'), 3000);
+      } else {
+        document.getElementById('mensaje-recuperar').textContent = data;
+      }
+    }
+
+    // Cerrar modal haciendo clic fuera
+    window.onclick = e => {
+      if (e.target.classList.contains('modal')) {
+        e.target.style.display = 'none';
+      }
+    };
+  </script>
+</body>
+</html>

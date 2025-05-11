@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Perfil del usuario</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <%- include('partials/navbar') %>
+
+  <div class="contenedor perfil-usuario">
+    <% if (session && session.usuario) { %>
+      <h2>Perfil de <%= session.usuario.nombre_usuario %></h2>
+
+      <p><strong>Correo:</strong> <%= session.usuario.correo %></p>
+      <p><strong>Estado:</strong> <%= session.usuario.estado %></p>
+
+      <hr>
+      <h3>Mis publicaciones</h3>
+
+      <% if (publicaciones.length === 0) { %>
+        <p>No has publicado nada aún.</p>
+      <% } else { %>
+        <div class="lista-publicaciones-perfil">
+          <% publicaciones.forEach(pub => { %>
+            <div class="card-publicacion">
+              <h3><%= pub.titulo %></h3>
+              <p><strong>Fecha:</strong> <%= new Date(pub.fecha_publicacion).toLocaleDateString() %></p>
+              <p><strong>Etiquetas:</strong> <%= pub.etiquetas %></p>
+              <a href="/foro#publicacion-<%= pub.id %>" class="ver-publicacion-btn">🔗 Ver publicación</a>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+
+    <% } else { %>
+      <p>No has iniciado sesión. <a href="/login">Inicia sesión aquí</a>.</p>
+    <% } %>
+  </div>
+</body>
+</html>

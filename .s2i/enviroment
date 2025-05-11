@@ -1,0 +1,10 @@
+NODE_ENV=production
+PORT=3000
+ADMIN_EMAIL=admin@correo.com
+EMAIL_USER=tu_correo@gmail.com
+EMAIL_PASS=tu_clave_de_aplicacion
+DB_USER=usuario_sql
+DB_PASSWORD=clave_sql
+DB_SERVER=servidor_sql
+DB_DATABASE=nombre_base_datos
+DB_PORT=1433

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Foro - Etiqueta <%= etiqueta %></title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <%- include('partials/navbar') %>
+
+  <div class="contenedor">
+    <h1>Publicaciones con la etiqueta <%= etiqueta %></h1>
+    <a href="/foro">← Volver al foro</a>
+
+    <% if (publicaciones.length === 0) { %>
+      <p>No hay publicaciones con esta etiqueta.</p>
+    <% } else { %>
+      <% publicaciones.forEach(pub => { %>
+        <div class="publicacion">
+          <h3><%= pub.titulo %></h3>
+          <p><%= pub.contenido %></p>
+          <p>Etiquetas: 
+            <% pub.etiquetas.split(',').forEach(et => { %>
+              <a href="/foro/etiqueta/<%= et.replace('#','') %>"><%= et.trim() %></a>
+            <% }) %>
+          </p>
+          <small>Por <%= pub.username %> el <%= new Date(pub.fecha_publicacion).toLocaleDateString() %></small>
+          <hr>
+        </div>
+      <% }) %>
+    <% } %>
+  </div>
+</body>
+</html>

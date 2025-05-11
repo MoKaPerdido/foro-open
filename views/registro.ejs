@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <!-- Barra de navegación -->
+  <nav>
+    <%- include('partials/navbar') %>
+  </nav>
+  
+  <div class="contenedor">
+    <h2>Registrarse</h2>
+
+    <!-- Formulario de registro -->
+    <form action="/usuarios" method="POST" class="formulario-registro">
+      <input type="text" name="nombre_usuario" placeholder="Nombre de usuario" required><br><br>
+      <input type="email" name="correo" placeholder="Correo electrónico" required><br><br>
+      <input type="password" name="contraseña" placeholder="Contraseña" required><br><br>
+      <button type="submit" class="boton-redireccion">Registrarse</button>
+    </form>
+  </div>
+</body>
+</html>

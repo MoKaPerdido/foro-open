@@ -1,0 +1,22 @@
+<nav>
+    <ul>
+      <li><a href="/">Inicio</a></li>
+      <li><a href="/enlace_1">Recomendaciones</a></li>
+      <li><a href="/enlace_2">Guía de supervivencia</a></li>
+      <li><a href="/foro">Foro</a></li>
+      <% if (session && session.usuario) { %>
+        <li><a href="/perfil">👤 <%= session.usuario.nombre_usuario %></a></li>
+        
+  
+        <% if (session.usuario.correo === 'admin@correo.com') { %>
+          <li><a href="/admin/usuarios">👑 Admin</a></li>
+        <% } %>
+  
+        <li><a href="/usuarios/logout">Cerrar sesión</a></li>
+      <% } else { %>
+        <li><a href="/login">Iniciar sesión</a></li>
+        <li><a href="/registro">Registrarse</a></li>
+      <% } %>
+    </ul>
+  </nav>
+  

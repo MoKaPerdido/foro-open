@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Usuarios Registrados</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav>
+    <%- include('partials/navbar') %>
+  </nav>
+  
+  <div class="contenedor">
+    <h2>Lista de usuarios registrados</h2>
+    <table border="1" style="margin: 0 auto; background: white;">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Correo</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% usuarios.forEach(usuario => { %>
+          <tr>
+            <td><%= usuario.id %></td>
+            <td><%= usuario.nombre_usuario %></td>
+            <td><%= usuario.correo %></td>
+            <td><%= usuario.estado %></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

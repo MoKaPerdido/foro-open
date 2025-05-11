@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Foro - Publicaciones</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<%- include('partials/navbar') %>
+
+<div class="foro-container">
+  <h1>Foro</h1>
+
+  <!-- Filtro dinámico de etiquetas -->
+  <div class="filtros-etiquetas">
+    <input type="text" id="buscador-etiquetas" placeholder="Filtrar por etiqueta (sin #)">
+    <button onclick="limpiarFiltro()">❌ Limpiar</button>
+  </div>
+
+  <!-- Botón para abrir modal de nueva publicación -->
+  <button class="boton-publicar abrir-modal">➕ Nueva Publicación</button>
+
+  <!-- Bucle de publicaciones -->
+  <div class="publicaciones">
+    <% publicaciones.forEach(pub => { %>
+      <div class="tarjeta-publicacion" id="publicacion-<%= pub.id %>" data-etiquetas="<%= pub.etiquetas.toLowerCase() %>">
+        <h3><%= pub.titulo %></h3>
+        <p><%= pub.contenido %></p>
+        <p><small>Publicado por <%= pub.nombre_usuario %> el <%= new Date(pub.fecha_publicacion).toLocaleDateString() %></small></p>
+        <p><strong>Etiquetas:</strong> <%= pub.etiquetas %></p>
+
+        <!-- Reacciones -->
+        <div class="reacciones">
+          <form action="/foro/reaccionar/<%= pub.id %>" method="POST" style="display: inline;">
+            <input type="hidden" name="tipo" value="like">
+            <button type="submit">👍</button>
+            <span><%= pub.reacciones?.like || 0 %></span>
+          </form>
+
+          <form action="/foro/reaccionar/<%= pub.id %>" method="POST" style="display: inline;">
+            <input type="hidden" name="tipo" value="dislike">
+            <button type="submit">👎</button>
+            <span><%= pub.reacciones?.dislike || 0 %></span>
+          </form>
+        </div>
+
+        <!-- Acciones (Editar / Eliminar) -->
+        <% if (session.usuario && session.usuario.id === pub.usuario_id) { %>
+          <div class="acciones-publicacion">
+            <button 
+              class="editar-btn abrir-modal-editar"
+              data-id="<%= pub.id %>"
+              data-titulo="<%= pub.titulo.replace(/"/g, '&quot;') %>"
+              data-contenido="<%= pub.contenido.replace(/"/g, '&quot;') %>"
+              data-etiquetas="<%= pub.etiquetas.replace(/"/g, '&quot;') %>">
+              ✏️ Editar
+            </button>
+
+            <form action="/foro/eliminar/<%= pub.id %>" method="POST" style="display:inline;">
+              <button type="submit" class="eliminar-btn" onclick="return confirm('¿Eliminar esta publicación?')">🗑️ Eliminar</button>
+            </form>
+          </div>
+        <% } %>
+
+        <!-- Comentarios y respuestas -->
+        <div class="comentarios">
+          <% pub.comentarios.forEach(com => { %>
+            <div class="comentario">
+              <strong><%= com.nombre_usuario %>:</strong> <%= com.comentario %>
+
+              <% if (session.usuario) { %>
+                <form action="/foro/responder/<%= com.id %>" method="POST" class="respuesta-form">
+                  <input type="text" name="respuesta" placeholder="Responder..." required>
+                  <button type="submit">↩️</button>
+                </form>
+              <% } %>
+
+              <% if (com.respuestas && com.respuestas.length > 0) { %>
+                <div class="respuestas">
+                  <% com.respuestas.forEach(res => { %>
+                    <div class="respuesta">
+                      <small><strong><%= res.nombre_usuario %></strong>: <%= res.respuesta %></small>
+                    </div>
+                  <% }) %>
+                </div>
+              <% } %>
+            </div>
+          <% }) %>
+        </div>
+
+        <!-- Formulario para comentar -->
+        <% if (session.usuario) { %>
+          <form action="/foro/comentar/<%= pub.id %>" method="POST" class="comentario-form">
+            <textarea name="comentario" placeholder="Escribe un comentario..." rows="3" required></textarea>
+            <button type="submit">💬 Comentar</button>
+          </form>
+        <% } %>
+      </div>
+    <% }) %>
+  </div>
+</div>
+
+<!-- Modal: nueva publicación -->
+<div class="modal" id="modal-publicacion">
+  <div class="modal-contenido">
+    <span class="cerrar-modal" onclick="cerrarModal('modal-publicacion')">&times;</span>
+    <form action="/foro/nueva" method="POST">
+      <input type="text" name="titulo" placeholder="Título" required>
+      <textarea name="contenido" placeholder="Contenido" rows="5" required></textarea>
+      <input type="text" name="etiquetas" placeholder="Etiquetas (ej: #crafting, #supervivencia)">
+      <button type="submit">Publicar</button>
+    </form>
+  </div>
+</div>
+
+<!-- Modal: editar publicación -->
+<div class="modal" id="modal-editar">
+  <div class="modal-contenido">
+    <span class="cerrar-modal" onclick="cerrarModal('modal-editar')">&times;</span>
+    <form id="form-editar" method="POST">
+      <input type="text" name="titulo" id="edit-titulo" required>
+      <textarea name="contenido" id="edit-contenido" rows="5" required></textarea>
+      <input type="text" name="etiquetas" id="edit-etiquetas">
+      <button type="submit">Guardar cambios</button>
+    </form>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script>
+  // Abrir modal de nueva publicación
+  document.querySelector('.abrir-modal').onclick = () => {
+    document.getElementById('modal-publicacion').style.display = 'flex';
+  };
+
+  // Abrir modal de edición
+  document.querySelectorAll('.abrir-modal-editar').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.id;
+      const titulo = btn.dataset.titulo;
+      const contenido = btn.dataset.contenido;
+      const etiquetas = btn.dataset.etiquetas;
+
+      document.getElementById('edit-titulo').value = titulo;
+      document.getElementById('edit-contenido').value = contenido;
+      document.getElementById('edit-etiquetas').value = etiquetas;
+      document.getElementById('form-editar').action = `/foro/editar/${id}`;
+      document.getElementById('modal-editar').style.display = 'flex';
+    });
+  });
+
+  // Cerrar modal
+  function cerrarModal(id) {
+    document.getElementById(id).style.display = 'none';
+  }
+
+  // Cerrar modal si se hace clic fuera
+  window.onclick = e => {
+    if (e.target.classList.contains('modal')) {
+      e.target.style.display = 'none';
+    }
+  };
+
+  // Filtro dinámico
+  const inputFiltro = document.getElementById('buscador-etiquetas');
+  const tarjetas = document.querySelectorAll('.tarjeta-publicacion');
+
+  inputFiltro.addEventListener('input', () => {
+    const texto = inputFiltro.value.toLowerCase();
+
+    tarjetas.forEach(tarjeta => {
+      const etiquetas = tarjeta.dataset.etiquetas;
+      tarjeta.style.display = etiquetas.includes(texto) ? 'block' : 'none';
+    });
+  });
+
+  function limpiarFiltro() {
+    inputFiltro.value = '';
+    tarjetas.forEach(t => t.style.display = 'block');
+  }
+</script>
+</body>
+</html>

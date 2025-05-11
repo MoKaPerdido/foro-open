@@ -1,0 +1,633 @@
+/* -----Estilos generales----- */
+body, html {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    height: 100%;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: url(fondo_2.png) center center;
+    background-size: cover;
+    margin: 0;
+}
+
+/* -----Menú principal----- */
+nav {
+    background-color: #222;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    padding: 10px 0;
+    text-align: center;
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    padding: 10px 15px;
+    transition: 0.3s;
+}
+
+nav ul li a:hover {
+    background-color: #444;
+    border-radius: 5px;
+}
+
+/* -----Contenedor principal----- */
+.contenedor {
+    text-align: center;
+    width: 60%;
+    max-width: 600px;
+    padding: 20px;
+    background-color: rgba(44, 44, 109, 0.8);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 100px;
+}
+
+/* -----Tipografía general----- */
+.contenedor h1, .contenedor h2 {
+    color: #00b4d8;
+    font-size: 2.5em;
+    margin-bottom: 25px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.contenedor p, .contenedor ol {
+    font-size: 1.1em;
+    line-height: 1.6;
+    text-align: justify;
+    hyphens: auto;
+    text-justify: inter-word;
+    max-width: 800px;
+    padding: 0 15px;
+    text-shadow: 1px 1px 2px rgba(58, 5, 5, 0.7);
+}
+
+/* -----Imágenes----- */
+.Imagen-inicio,
+.Imagen-recomendaciones {
+    width: 100%;
+    max-width: 1000px;
+    height: auto;
+    display: block;
+    margin: 25px auto;
+    border-radius: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 15px rgba(0, 179, 215, 0.3);
+}
+
+/* -----Botón externo----- */
+.botom-redireccion {
+    background-color: bisque;
+    color: black;
+    padding: 10px 20px;
+    margin-top: 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+/* -----Responsive----- */
+@media (max-width: 768px) {
+    .contenedor {
+        padding: 20px;
+        margin: 15px;
+    }
+
+    .contenedor h1 {
+        font-size: 1.8em;
+    }
+
+    .Imagen-inicio {
+        margin: 15px auto;
+    }
+}
+
+/* ------Estilo Foro------*/
+.foro-container {
+    padding: 2rem;
+    max-width: 900px;
+    margin: auto;
+}
+
+.publicaciones {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.tarjeta-publicacion {
+    background: rgba(36, 65, 88, 0.534);
+    border-left: 5px solid #00b4d8;
+    padding: 1rem;
+    border-radius: 10px;
+    color: white;
+    box-shadow: 0 0 8px rgba(0,0,0,0.4);
+}
+
+.tarjeta-publicacion h3 {
+    margin-top: 0;
+}
+
+/* -----Botones editar/eliminar----- */
+.acciones-publicacion {
+    margin-top: 10px;
+}
+
+.editar-btn, .eliminar-btn {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-right: 8px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+}
+
+.editar-btn {
+    background-color: #00b4d8;
+}
+
+.editar-btn:hover {
+    background-color: #0096c7;
+}
+
+.eliminar-btn {
+    background-color: #d62828;
+}
+
+.eliminar-btn:hover {
+    background-color: #a4161a;
+}
+
+/* -----Botón publicar y modal----- */
+.boton-publicar {
+    background-color: #00b4d8;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.boton-publicar:hover {
+    background-color: #007c9a;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1001;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(5px);
+    background-color: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-contenido {
+    background-color: #ffffff;
+    padding: 30px;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    animation: slideIn 0.4s ease;
+    position: relative;
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.cerrar-modal {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #555;
+}
+
+.modal-contenido input,
+.modal-contenido textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    box-sizing: border-box;
+    resize: vertical;
+}
+
+.modal-contenido button[type="submit"] {
+    background-color: #00b4d8;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.modal-contenido button[type="submit"]:hover {
+    background-color: #0097b2;
+}
+/* ----- Estilo para resumen de publicaciones en perfil ----- */
+.resumen-publicaciones {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .resumen-item {
+    background-color: rgba(44, 44, 109, 0.8);
+    padding: 15px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    color: white;
+    transition: background-color 0.3s;
+  }
+  
+  .resumen-item h3 {
+    margin: 0;
+    color: #00b4d8;
+  }
+  
+  .resumen-item p {
+    margin: 5px 0;
+    font-size: 0.95em;
+  }
+  
+  .resumen-item a {
+    color: #ffd166;
+    text-decoration: underline;
+    font-size: 0.9em;
+  }
+  
+  .resumen-item a:hover {
+    color: #ffe08a;
+  }
+
+  .publicacion:target {
+    animation: resaltar 2s ease;
+    border: 2px solid #00b4d8;
+    background-color: rgba(0, 180, 216, 0.1);
+  }
+  
+  @keyframes resaltar {
+    from {
+      background-color: rgba(0, 180, 216, 0.3);
+    }
+    to {
+      background-color: rgba(0, 180, 216, 0.1);
+    }
+  }
+
+  .perfil-usuario {
+    padding: 20px;
+    max-width: 1000px;
+    margin: auto;
+  }
+  
+  .lista-publicaciones-perfil {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 20px;
+  }
+  
+  .card-publicacion {
+    background-color: #1e1e2f;
+    border-left: 6px solid #00b4d8;
+    border-radius: 10px;
+    padding: 20px;
+    color: #ffffff;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+  }
+  
+  .card-publicacion h3 {
+    margin-top: 0;
+    font-size: 1.4em;
+    color: #ffffff;
+  }
+  
+  .card-publicacion p {
+    margin: 8px 0;
+  }
+  
+  .ver-publicacion-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 15px;
+    background-color: #00b4d8;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+  
+  .ver-publicacion-btn:hover {
+    background-color: #0096c7;
+  }
+  textarea {
+    width: 100%;
+    font-size: 1em;
+    padding: 8px;
+    border-radius: 5px;
+  }
+  
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 10;
+    left: 0; top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal-contenido {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+  }
+  
+  .cerrar-modal {
+    float: right;
+    font-size: 1.5em;
+    cursor: pointer;
+  }
+  
+  .comentario-form textarea {
+    resize: vertical;
+    min-height: 60px;
+  }
+  
+  .boton-publicar {
+    background-color: #00b4d8;
+    border: none;
+    padding: 10px;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+/** ----- Respuestas Comentarios ----- **/
+  .respuestas {
+    margin-left: 20px;
+    margin-top: 5px;
+    padding-left: 10px;
+    border-left: 2px solid #ccc;
+  }
+  
+  .respuesta {
+    font-size: 0.9em;
+    margin-bottom: 5px;
+    color: #444;
+  }
+  
+  .respuesta-form {
+    margin-left: 20px;
+    margin-top: 5px;
+  }
+
+/* Comentario principal */
+.comentario {
+    background-color: #cec224;
+    padding: 10px;
+    margin-top: 10px;
+    border-left: 4px solid #0077b6;
+    border-radius: 4px;
+  }
+  
+/* Formulario de respuesta */
+  .respuesta-form {
+    display: flex;
+    margin-top: 5px;
+    gap: 5px;
+  }
+  
+  .respuesta-form input[type="text"] {
+    flex: 1;
+    padding: 5px;
+    border: 1px solid #381414;
+    border-radius: 3px;
+  }
+  
+  .respuesta-form button {
+    background-color: #00b4d8;
+    border: none;
+    padding: 5px 10px;
+    color: rgb(31, 133, 99);
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  .respuesta-form button:hover {
+    background-color: #0077b6;
+  }
+  
+/* Contenedor de respuestas */
+  .respuestas {
+    margin-left: 20px;
+    margin-top: 5px;
+    border-left: 2px dashed #4c0a4e;
+    padding-left: 10px;
+  }
+  
+  .respuesta {
+    margin-top: 5px;
+    font-size: 0.9em;
+    background-color: #919246;
+    padding: 5px;
+    border-radius: 3px;
+  }
+  .filtro-etiquetas {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .filtro-etiquetas input {
+    padding: 8px;
+    width: 250px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  
+  .filtro-etiquetas button {
+    padding: 8px 12px;
+    background-color: #2b8a3e;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .filtro-etiquetas .limpiar-filtro {
+    margin-left: 10px;
+    color: #d6336c;
+    text-decoration: none;
+  }
+/* ===== Filtro de etiquetas ===== */
+.filtros-etiquetas {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 20px auto;
+  max-width: 600px;
+}
+
+.filtros-etiquetas input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1em;
+}
+
+.filtros-etiquetas button {
+  padding: 10px 15px;
+  background-color: #00b4d8;
+  border: none;
+  color: white;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.filtros-etiquetas button:hover {
+  background-color: #0096c7;
+}
+
+/* ===== Botones de reacción ===== */
+.reacciones {
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.reacciones form {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.reacciones button {
+  background-color: transparent;
+  border: none;
+  font-size: 1.2em;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.reacciones button:hover {
+  transform: scale(1.2);
+}
+
+.reacciones span {
+  font-weight: bold;
+  font-size: 1em;
+}
+.formulario-registro input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.boton-redireccion {
+  padding: 10px 20px;
+  background-color: #0077b6;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.boton-redireccion:hover {
+  background-color: #023e8a;
+}
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 10;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.7);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-contenido {
+  background-color: white;
+  padding: 30px;
+  border-radius: 8px;
+  max-width: 400px;
+  width: 90%;
+  color: black;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+.cerrar-modal {
+  float: right;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.boton-recuperar {
+  background: none;
+  border: none;
+  color: #0077cc;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 0.95em;
+}
+.mensaje-error {
+  background-color: #ffdddd;
+  border-left: 6px solid #f44336;
+  padding: 10px;
+  margin-bottom: 20px;
+  color: #a94442;
+}
